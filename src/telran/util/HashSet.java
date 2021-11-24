@@ -83,28 +83,63 @@ public class HashSet<T> extends AbstractSet<T> {
 
 	@Override
 	public Iterator<T> iterator() {
-		//TODO 
-		//return new HashSetIterator();
-		return null;
+		
+		return new HashSetIterator();
 	}
 	private class HashSetIterator implements Iterator<T> {
-//TODO iterator required fields
-		@Override
-		public boolean hasNext() {
-			// TODO Auto-generated method stub
-			return false;
-		}
+			Iterator<T> currentIterator;
+			Iterator<T> prevIterator;
+			int indexIterator = 0;
+			HashSetIterator() {
 
-		@Override
-		public T next() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-		@Override
-		public void remove() {
-			//TODO
-		}
-		
+				getCurrentIterator();
+			}
+				@Override
+				public boolean hasNext() {
+					return currentIterator != null;
+				}
+
+				@Override
+				public T next() {
+					
+					T res = currentIterator.next();
+					prevIterator = currentIterator;
+					getCurrentIterator();
+					return res;
+				}
+				private void getCurrentIterator() {
+					if (currentIterator == null || !currentIterator.hasNext()) {
+						Iterator<T> it = null;
+						while(it == null || !it.hasNext()) {
+							
+							LinkedList<T> list = getList();
+							indexIterator++;
+							
+							if (list == null) {
+								currentIterator = null;
+								return;
+							}
+							it = list.iterator();
+						}
+						currentIterator = it;
+					}
+					
+				}
+
+				private LinkedList<T> getList() {
+					while(indexIterator < hashTable.length &&
+							hashTable[indexIterator] == null) {
+						indexIterator++;
+					}
+					return indexIterator < hashTable.length ?
+							hashTable[indexIterator] : null;
+				}
+
+				@Override
+				public void remove() {
+					prevIterator.remove();
+					size--;
+				}
 	}
 
 }
