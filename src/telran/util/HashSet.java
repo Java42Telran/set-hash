@@ -109,6 +109,7 @@ public class HashSet<T> extends AbstractSet<T> {
 				}
 				private void getCurrentIterator() {
 					if (currentIterator == null || !currentIterator.hasNext()) {
+						//case when current iterator is not the previous current iterator
 						Iterator<T> it = null;
 						while(it == null || !it.hasNext()) {
 							
